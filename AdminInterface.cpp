@@ -2,6 +2,7 @@
 #include "Department.h"
 #include <iostream>
 #include <fstream>
+#include <iomanip>
 
 extern Department* StoreDepartments;
 extern int TotalDepartments;
@@ -119,6 +120,11 @@ void AdminInterface::saveChangesToCSV() {
         printError("Failed to open CSV file for writing.");
         return;
     }
+
+    // Default stream precision is 6 significant digits, so a price like
+    // 12345.67 gets written as 12345.7 and loses a cent on every reload.
+    // Set it once here. Integers are unaffected by this.
+    file << std::fixed << std::setprecision(2);
 
     file << TotalDepartments << "\n";
     for (int i = 0; i < TotalDepartments; ++i) {

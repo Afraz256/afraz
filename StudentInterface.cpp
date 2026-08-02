@@ -1,6 +1,7 @@
 #include "StudentInterface.h"
 #include "Department.h"
 #include <iostream>
+#include <iomanip>
 
 extern Department* StoreDepartments;
 extern int TotalDepartments;
@@ -85,7 +86,8 @@ void StudentInterface::listCoursesOfDepartment(int deptIndex) {
         for (int i = 0; i < dept.getTotalCourses(); ++i) {
             Course c = dept.getCourses()[i];
             std::cout << i + 1 << ". " << c.getCourseNumber() << " - " << c.getCourseName()
-                      << " | Sched: " << c.getSchedule() << " | Price: $" << c.getPrice() << std::endl;
+                      << " | Sched: " << c.getSchedule() << " | Price: $"
+                      << std::fixed << std::setprecision(2) << c.getPrice() << std::endl;
         }
 
         std::cout << "\nOptions:\n1. Add to Cart a Course\n2. Go Back to Browse Departments Menu\n";

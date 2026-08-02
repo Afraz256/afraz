@@ -1,7 +1,7 @@
 #include "StudentInterface.h"
 #include "Department.h"
 #include <iostream>
-#include <iomanip>
+#include <iomanip>  // for setprecision, fixed by L3I
 
 // Defined in main.cpp, same ones the admin side uses.
 extern Department* StoreDepartments;
@@ -54,6 +54,7 @@ void StudentInterface::showCartMenu() {
 void StudentInterface::browseDepartments() {
     int choice = 0;
     // eof() check stops this menu redrawing after the course menu below bailed.
+    // fixed by L3I
     while (choice != 2 && !std::cin.eof()) {
         if (TotalDepartments == 0) {
             std::cout << "\nNo departments available." << std::endl;
@@ -96,6 +97,7 @@ void StudentInterface::listCoursesOfDepartment(int deptIndex) {
             Course c = dept.getCourses()[i];
             std::cout << i + 1 << ". " << c.getCourseNumber() << " - " << c.getCourseName()
                       << " | Sched: " << c.getSchedule() << " | Price: $"
+                      // was printing 12345.7 instead of 12345.67, fixed by L3I
                       << std::fixed << std::setprecision(2) << c.getPrice() << std::endl;
         }
 

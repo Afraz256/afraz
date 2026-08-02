@@ -17,7 +17,7 @@ public:
 
 protected:
     // Returned when input runs out. -1 is safe, menus all start at 0 or 1.
-    static const int INPUT_ABORTED = -1;
+    static const int INPUT_ABORTED = -1;   // added, fixed by L3I
 
     // Protected so only the derived interfaces can use them.
     int getValidIntInput(const std::string& prompt, int min, int max);

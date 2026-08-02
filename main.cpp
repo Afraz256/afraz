@@ -23,7 +23,7 @@ void loadCSVData() {
     std::string line;
 
     // stoi and stod throw on text where a number should be. Without this a
-    // damaged file kills the program before the menu even shows.
+    // damaged file kills the program before the menu even shows. fixed by L3I
     try {
         if (std::getline(file, line) && !line.empty()) {
             TotalDepartments = std::stoi(line);
@@ -114,7 +114,7 @@ int main() {
             }
         } else {
             // Input ran out. Retrying would spin forever since clear() resets
-            // the flag and the next read hits EOF again straight away.
+            // the flag and the next read hits EOF again. fixed by L3I
             if (std::cin.eof()) {
                 std::cout << "\nInput ended. Exiting." << std::endl;
                 break;

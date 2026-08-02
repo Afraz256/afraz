@@ -13,6 +13,7 @@ private:
 
     // Static so it belongs to the class, not every Cart. Was a plain const
     // member, which silently deleted the assignment operator below.
+    // fixed by L3I
     static constexpr double TAX_RATE = 0.13;
 
 public:
@@ -30,7 +31,7 @@ public:
     void clear();
 
     double getSubtotal() const;
-    double getTotalWithTax() const;
+    double getTotalWithTax() const;   // added, fixed by L3I
 };
 
 #endif

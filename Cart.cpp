@@ -8,7 +8,8 @@ Cart::~Cart() {
     clear();
 }
 
-// Deep copy, same as Department's.
+// Deep copy, same as Department's. These two were declared in the header but
+// never written, so any copy would not have linked. fixed by L3I
 Cart::Cart(const Cart& other) {
     count = other.count;
     totalCost = other.totalCost;

@@ -1,6 +1,6 @@
 #include "Interface.h"
 #include <iostream>
-#include <limits>
+#include <limits>   // was missing, fixed by L3I
 
 void Interface::printError(const std::string& message) const {
     std::cout << "Error: " << message << std::endl;
@@ -16,6 +16,7 @@ int Interface::getValidIntInput(const std::string& prompt, int min, int max) {
         }
         // Used to return max, which only looked right because max was Exit.
         // On the "[0 to go back]" prompts it picked the last department.
+        // fixed by L3I
         if (std::cin.eof()) {
             return INPUT_ABORTED;
         }
@@ -36,7 +37,7 @@ std::string Interface::getNonEmptyString(const std::string& prompt) {
             return input;
         }
         // getline keeps failing at EOF and input stays empty, so this would
-        // spin forever. Empty string is the abort signal.
+        // spin forever. Empty string is the abort signal. fixed by L3I
         if (std::cin.eof()) {
             return "";
         }
@@ -53,6 +54,7 @@ double Interface::getValidPositiveDouble(const std::string& prompt) {
             return value;
         }
         // Same trick. -1.0 works since a real price is always positive.
+        // fixed by L3I
         if (std::cin.eof()) {
             return -1.0;
         }

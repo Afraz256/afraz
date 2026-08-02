@@ -2,8 +2,8 @@
 #include "Department.h"
 #include <iostream>
 #include <fstream>
-#include <iomanip>
-#include <cstring>
+#include <iomanip>  // for setprecision, fixed by L3I
+#include <cstring>  // strcmp was coming in indirectly, fixed by L3I
 
 // Defined in main.cpp. extern points us at those, no new copies.
 extern Department* StoreDepartments;
@@ -127,7 +127,7 @@ void AdminInterface::saveChangesToCSV() {
     }
 
     // Default precision is 6 significant digits, so 12345.67 becomes 12345.7.
-    // Set once here.
+    // Set once here. Was losing cents on every save. fixed by L3I
     file << std::fixed << std::setprecision(2);
 
     file << TotalDepartments << "\n";

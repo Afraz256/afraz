@@ -18,7 +18,7 @@ Department::~Department() {
     delete[] courses;
 }
 
-// Copy Constructor
+// Deep copy. Our own array, nothing shared after this.
 Department::Department(const Department& other) {
     setName(other.name);
     totalCourses = other.totalCourses;
@@ -33,8 +33,8 @@ Department::Department(const Department& other) {
     }
 }
 
-// Assignment Operator
 Department& Department::operator=(const Department& other) {
+    // Without this, d = d frees d's array then reads from it.
     if (this != &other) {
         delete[] courses;
 
@@ -58,17 +58,20 @@ int Department::getTotalCourses() const { return totalCourses; }
 Course* Department::getCourses() const { return courses; }
 
 void Department::setName(const char* deptName) {
+    // strncpy won't null terminate if it fills the buffer, so we do it.
     strncpy(name, deptName, sizeof(name) - 1);
     name[sizeof(name) - 1] = '\0';
 }
 
+// Arrays can't grow, so "adding" means building a bigger one and copying over.
+// Admin adds in any order, so this has to work whatever is already here.
 void Department::addCourse(const Course& course) {
     Course* temp = new Course[totalCourses + 1];
     for (int i = 0; i < totalCourses; ++i) {
         temp[i] = courses[i];
     }
     temp[totalCourses] = course;
-    delete[] courses;
+    delete[] courses;   // free the old block before repointing, or it leaks
     courses = temp;
     totalCourses++;
 }

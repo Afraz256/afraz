@@ -8,8 +8,7 @@ Cart::~Cart() {
     clear();
 }
 
-// Deep copy. Allocate our own array instead of pointing at the other Cart's,
-// or both destructors would free the same block.
+// Deep copy, same as Department's.
 Cart::Cart(const Cart& other) {
     count = other.count;
     totalCost = other.totalCost;
@@ -25,8 +24,7 @@ Cart::Cart(const Cart& other) {
 }
 
 Cart& Cart::operator=(const Cart& other) {
-    // Guard against c = c. Without it we'd delete our array and then try to
-    // read from it.
+    // Guards c = c. Without it we free our array then read from it.
     if (this != &other) {
         delete[] courses;
 
@@ -47,6 +45,8 @@ Cart& Cart::operator=(const Cart& other) {
 
 void Cart::clear() {
     delete[] courses;
+    // checkout() empties the cart but the object lives on, so don't leave a
+    // stale pointer here.
     courses = nullptr;
     count = 0;
     totalCost = 0.0;
@@ -56,6 +56,8 @@ bool Cart::isEmpty() const {
     return count == 0;
 }
 
+// Grow by one, same as Department::addCourse. Running subtotal so we don't
+// walk the array every time.
 void Cart::addCourse(const Course& course) {
     Course* temp = new Course[count + 1];
 

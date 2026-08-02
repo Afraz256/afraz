@@ -1,5 +1,6 @@
 #include "Course.h"
 
+// Initializer lists, not assignment in the body. Builds each member once.
 Course::Course() : courseNumber(""), courseName(""), schedule(""), price(0.0) {}
 
 Course::Course(std::string cNum, std::string cName, std::string sched, double p)

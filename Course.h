@@ -3,6 +3,8 @@
 
 #include <string>
 
+// One course. PRG210, "Programming Fundamentals", M/W, 499.99.
+// All strings and a double, nothing on the heap, so no destructor needed.
 class Course {
 private:
     std::string courseNumber;
@@ -11,11 +13,11 @@ private:
     double price;
 
 public:
-    // Constructors
+    // Needed because new Course[n] builds every slot before we fill them.
     Course();
     Course(std::string cNum, std::string cName, std::string sched, double p);
 
-    // Getters and Setters
+    // Getters and setters
     std::string getCourseNumber() const;
     std::string getCourseName() const;
     std::string getSchedule() const;

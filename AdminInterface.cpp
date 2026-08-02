@@ -4,6 +4,7 @@
 #include <fstream>
 #include <iomanip>  // for setprecision, fixed by L3I
 #include <cstring>  // strcmp was coming in indirectly, fixed by L3I
+#include <cstddef>
 
 // Defined in main.cpp. extern points us at those, no new copies.
 extern Department* StoreDepartments;
@@ -62,7 +63,7 @@ void AdminInterface::addDepartment() {
 
     // Grow by one again, on the global array. The copy below is why Department
     // needs an assignment operator.
-    Department* temp = new Department[TotalDepartments + 1];
+    Department* temp = new Department[static_cast<std::size_t>(TotalDepartments + 1)];
     for (int i = 0; i < TotalDepartments; ++i) {
         temp[i] = StoreDepartments[i];
     }

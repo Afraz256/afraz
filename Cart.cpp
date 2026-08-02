@@ -1,6 +1,7 @@
 #include "Cart.h"
 #include <iostream>
 #include <iomanip>
+#include <cstddef>
 
 Cart::Cart() : courses(nullptr), count(0), totalCost(0.0) {}
 
@@ -15,7 +16,7 @@ Cart::Cart(const Cart& other) {
     totalCost = other.totalCost;
 
     if (count > 0) {
-        courses = new Course[count];
+        courses = new Course[static_cast<std::size_t>(count)];
         for (int i = 0; i < count; ++i) {
             courses[i] = other.courses[i];
         }
@@ -33,7 +34,7 @@ Cart& Cart::operator=(const Cart& other) {
         totalCost = other.totalCost;
 
         if (count > 0) {
-            courses = new Course[count];
+            courses = new Course[static_cast<std::size_t>(count)];
             for (int i = 0; i < count; ++i) {
                 courses[i] = other.courses[i];
             }
@@ -60,7 +61,7 @@ bool Cart::isEmpty() const {
 // Grow by one, same as Department::addCourse. Running subtotal so we don't
 // walk the array every time.
 void Cart::addCourse(const Course& course) {
-    Course* temp = new Course[count + 1];
+    Course* temp = new Course[static_cast<std::size_t>(count + 1)];
 
     for (int i = 0; i < count; ++i) {
         temp[i] = courses[i];

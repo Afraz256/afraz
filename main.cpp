@@ -4,6 +4,7 @@
 #include <limits>
 #include <stdexcept>
 #include <string>
+#include <cstddef>
 #include "Department.h"
 #include "Interface.h"
 #include "AdminInterface.h"
@@ -28,7 +29,7 @@ void loadCSVData() {
         if (std::getline(file, line) && !line.empty()) {
             TotalDepartments = std::stoi(line);
             if (TotalDepartments > 0) {
-                StoreDepartments = new Department[TotalDepartments];
+                StoreDepartments = new Department[static_cast<std::size_t>(TotalDepartments)];
                 for (int i = 0; i < TotalDepartments; ++i) {
                     if (std::getline(file, line)) {
                         std::stringstream ss(line);

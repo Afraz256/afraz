@@ -1,6 +1,7 @@
 #include "Department.h"
 #include <iostream>
 #include <cstring>
+#include <cstddef>
 
 Department::Department() {
     name[0] = '\0';
@@ -24,7 +25,7 @@ Department::Department(const Department& other) {
     totalCourses = other.totalCourses;
 
     if (totalCourses > 0) {
-        courses = new Course[totalCourses];
+        courses = new Course[static_cast<std::size_t>(totalCourses)];
         for (int i = 0; i < totalCourses; ++i) {
             courses[i] = other.courses[i];
         }
@@ -42,7 +43,7 @@ Department& Department::operator=(const Department& other) {
         totalCourses = other.totalCourses;
 
         if (totalCourses > 0) {
-            courses = new Course[totalCourses];
+            courses = new Course[static_cast<std::size_t>(totalCourses)];
             for (int i = 0; i < totalCourses; ++i) {
                 courses[i] = other.courses[i];
             }
@@ -66,7 +67,9 @@ void Department::setName(const char* deptName) {
 // Arrays can't grow, so "adding" means building a bigger one and copying over.
 // Admin adds in any order, so this has to work whatever is already here.
 void Department::addCourse(const Course& course) {
-    Course* temp = new Course[totalCourses + 1];
+    // new[] wants an unsigned size. The count is never negative, so the cast
+    // is safe, and saying so explicitly keeps -Wsign-conversion quiet.
+    Course* temp = new Course[static_cast<std::size_t>(totalCourses + 1)];
     for (int i = 0; i < totalCourses; ++i) {
         temp[i] = courses[i];
     }

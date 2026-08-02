@@ -11,6 +11,7 @@ extern Department* StoreDepartments;
 extern int TotalDepartments;
 extern const char* csvFile;
 
+// Menu loop. Print the options, read a choice, dispatch, go round again.
 void AdminInterface::run() {
     int choice = 0;
     while (choice != 5) {
@@ -120,6 +121,7 @@ void AdminInterface::addCourseToDepartment() {
     std::cout << "Course added successfully." << std::endl;
 }
 
+// Writes the same format loadCSVData() in main.cpp reads back.
 void AdminInterface::saveChangesToCSV() {
     std::ofstream file(csvFile);
     if (!file.is_open()) {

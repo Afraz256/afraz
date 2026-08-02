@@ -5,6 +5,7 @@
 
 Cart::Cart() : courses(nullptr), count(0), totalCost(0.0) {}
 
+// clear() already does the freeing, so no point repeating it here.
 Cart::~Cart() {
     clear();
 }
@@ -103,6 +104,7 @@ double Cart::getTotalWithTax() const {
     return totalCost + (totalCost * TAX_RATE);
 }
 
+// Different message when the cart is empty, so this has to branch.
 void Cart::checkout() {
     if (isEmpty()) {
         std::cout << "\nNo courses in the cart" << std::endl;

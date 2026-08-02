@@ -15,6 +15,7 @@ Department::Department(const char* deptName) {
     totalCourses = 0;
 }
 
+// Frees the courses array. The Course objects tidy themselves up.
 Department::~Department() {
     delete[] courses;
 }

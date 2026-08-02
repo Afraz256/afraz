@@ -7,6 +7,7 @@
 extern Department* StoreDepartments;
 extern int TotalDepartments;
 
+// Menu loop, same shape as the admin one.
 void StudentInterface::run() {
     int choice = 0;
     while (choice != 3) {

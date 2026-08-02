@@ -20,6 +20,7 @@ void AdminInterface::run() {
         std::cout << "Exit [5]\n";
 
         choice = getValidIntInput("Enter your choice [1, 2, 3, 4, 5]: ", 1, 5);
+        if (choice == INPUT_ABORTED) return;
 
         switch (choice) {
             case 1: listDepartments(); break;
@@ -80,7 +81,7 @@ void AdminInterface::addCourseToDepartment() {
 
     listDepartments();
     int deptChoice = getValidIntInput("Enter department number [0 to go back]: ", 0, TotalDepartments);
-    if (deptChoice == 0) return;
+    if (deptChoice == INPUT_ABORTED || deptChoice == 0) return;
 
     Department& selectedDept = StoreDepartments[deptChoice - 1];
 

@@ -14,7 +14,12 @@ int Interface::getValidIntInput(const std::string& prompt, int min, int max) {
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
             return choice;
         }
-        if (std::cin.eof()) { return max; } // bail out on EOF
+        // Returning max used to "work" only because max happened to be the
+        // Exit option on the menus. On the "[0 to go back]" prompts it picked
+        // the last department instead of going back.
+        if (std::cin.eof()) {
+            return INPUT_ABORTED;
+        }
         printError("Invalid choice. Please try again.");
         std::cin.clear();
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');

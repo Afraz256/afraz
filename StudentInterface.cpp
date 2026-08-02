@@ -15,6 +15,7 @@ void StudentInterface::run() {
         std::cout << "Exit [3]\n";
 
         choice = getValidIntInput("Enter your choice [1, 2, 3]: ", 1, 3);
+        if (choice == INPUT_ABORTED) return;
 
         switch (choice) {
             case 1: showCartMenu(); break;
@@ -33,6 +34,7 @@ void StudentInterface::showCartMenu() {
         std::cout << "Return to Main Menu [3]\n";
 
         choice = getValidIntInput("Enter your choice [1, 2, 3]: ", 1, 3);
+        if (choice == INPUT_ABORTED) return;
 
         switch (choice) {
             case 1:
@@ -49,7 +51,9 @@ void StudentInterface::showCartMenu() {
 
 void StudentInterface::browseDepartments() {
     int choice = 0;
-    while (choice != 2) {
+    // The eof() check stops us redrawing this menu once when the nested
+    // course menu below has already given up on input.
+    while (choice != 2 && !std::cin.eof()) {
         if (TotalDepartments == 0) {
             std::cout << "\nNo departments available." << std::endl;
             return;
@@ -62,9 +66,11 @@ void StudentInterface::browseDepartments() {
 
         std::cout << "\nOptions:\n1. List Courses of a Department\n2. Go Back to Main Menu\n";
         choice = getValidIntInput("Enter your choice [1, 2]: ", 1, 2);
+        if (choice == INPUT_ABORTED) return;
 
         if (choice == 1) {
             int deptNum = getValidIntInput("Enter department number [0 to go back]: ", 0, TotalDepartments);
+            if (deptNum == INPUT_ABORTED) return;
             if (deptNum != 0) {
                 listCoursesOfDepartment(deptNum - 1);
             }
@@ -92,9 +98,11 @@ void StudentInterface::listCoursesOfDepartment(int deptIndex) {
 
         std::cout << "\nOptions:\n1. Add to Cart a Course\n2. Go Back to Browse Departments Menu\n";
         choice = getValidIntInput("Enter your choice [1, 2]: ", 1, 2);
+        if (choice == INPUT_ABORTED) return;
 
         if (choice == 1) {
             int courseNum = getValidIntInput("Enter course number to buy [0 to go back]: ", 0, dept.getTotalCourses());
+            if (courseNum == INPUT_ABORTED) return;
             if (courseNum != 0) {
                 cart.addCourse(dept.getCourses()[courseNum - 1]);
                 std::cout << "Course added to cart." << std::endl;

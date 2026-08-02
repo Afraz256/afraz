@@ -28,6 +28,12 @@ std::string Interface::getNonEmptyString(const std::string& prompt) {
         if (!input.empty()) {
             return input;
         }
+        // At EOF getline keeps failing and input stays empty, so retrying would
+        // loop forever. Return the empty string as an "input aborted" signal --
+        // it is the one value this function never returns on success.
+        if (std::cin.eof()) {
+            return "";
+        }
         printError("Input cannot be empty.");
     }
 }
@@ -37,11 +43,16 @@ double Interface::getValidPositiveDouble(const std::string& prompt) {
     while (true) {
         std::cout << prompt;
         if (std::cin >> value && value > 0) {
-            std::cin.ignore(100, '\n');
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
             return value;
+        }
+        // Same EOF problem as above. -1.0 is safe as an "input aborted" signal
+        // because a successful read only ever returns a positive number.
+        if (std::cin.eof()) {
+            return -1.0;
         }
         printError("Invalid price. Must be a positive number.");
         std::cin.clear();
-        std::cin.ignore(100, '\n');
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     }
 }

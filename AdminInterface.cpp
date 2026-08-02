@@ -42,6 +42,7 @@ void AdminInterface::listDepartments() const {
 
 void AdminInterface::addDepartment() {
     std::string name = getNonEmptyString("Enter department name: ");
+    if (name.empty()) return; // input aborted (EOF)
 
     // Trim whitespace from name
     name.erase(0, name.find_first_not_of(" \t\n\r"));
@@ -88,11 +89,15 @@ void AdminInterface::addCourseToDepartment() {
     }
 
     std::string cNum = getNonEmptyString("Enter course number: ");
+    if (cNum.empty()) return; // input aborted (EOF)
+
     std::string cName = getNonEmptyString("Enter course name: ");
+    if (cName.empty()) return; // input aborted (EOF)
 
     std::string schedule;
     while (true) {
         schedule = getNonEmptyString("Enter course schedule (M/W, T/R, W/F): ");
+        if (schedule.empty()) return; // input aborted (EOF)
         if (schedule == "M/W" || schedule == "T/R" || schedule == "W/F") {
             break;
         }
@@ -100,6 +105,7 @@ void AdminInterface::addCourseToDepartment() {
     }
 
     double price = getValidPositiveDouble("Enter course price: ");
+    if (price < 0) return; // input aborted (EOF)
 
     Course newCourse(cNum, cName, schedule, price);
     selectedDept.addCourse(newCourse);

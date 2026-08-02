@@ -14,13 +14,14 @@ int Interface::getValidIntInput(const std::string& prompt, int min, int max) {
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
             return choice;
         }
-        // Returning max used to "work" only because max happened to be the
-        // Exit option on the menus. On the "[0 to go back]" prompts it picked
-        // the last department instead of going back.
+        // Used to return max, which only looked right because max was Exit.
+        // On the "[0 to go back]" prompts it picked the last department.
         if (std::cin.eof()) {
             return INPUT_ABORTED;
         }
         printError("Invalid choice. Please try again.");
+
+        // clear() unjams the stream, ignore() dumps what jammed it. Need both.
         std::cin.clear();
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     }
@@ -34,9 +35,8 @@ std::string Interface::getNonEmptyString(const std::string& prompt) {
         if (!input.empty()) {
             return input;
         }
-        // At EOF getline keeps failing and input stays empty, so retrying would
-        // loop forever. Return the empty string as an "input aborted" signal --
-        // it is the one value this function never returns on success.
+        // getline keeps failing at EOF and input stays empty, so this would
+        // spin forever. Empty string is the abort signal.
         if (std::cin.eof()) {
             return "";
         }
@@ -52,8 +52,7 @@ double Interface::getValidPositiveDouble(const std::string& prompt) {
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
             return value;
         }
-        // Same EOF problem as above. -1.0 is safe as an "input aborted" signal
-        // because a successful read only ever returns a positive number.
+        // Same trick. -1.0 works since a real price is always positive.
         if (std::cin.eof()) {
             return -1.0;
         }

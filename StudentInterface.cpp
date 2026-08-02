@@ -3,6 +3,7 @@
 #include <iostream>
 #include <iomanip>
 
+// Defined in main.cpp, same ones the admin side uses.
 extern Department* StoreDepartments;
 extern int TotalDepartments;
 
@@ -41,8 +42,9 @@ void StudentInterface::showCartMenu() {
                 cart.listCourses();
                 break;
             case 2:
+                // checkout() empties the cart, then back to the main menu.
                 cart.checkout();
-                return; // Returns to Main Menu after checkout
+                return;
             case 3:
                 return;
         }
@@ -51,8 +53,7 @@ void StudentInterface::showCartMenu() {
 
 void StudentInterface::browseDepartments() {
     int choice = 0;
-    // The eof() check stops us redrawing this menu once when the nested
-    // course menu below has already given up on input.
+    // eof() check stops this menu redrawing after the course menu below bailed.
     while (choice != 2 && !std::cin.eof()) {
         if (TotalDepartments == 0) {
             std::cout << "\nNo departments available." << std::endl;
@@ -78,7 +79,9 @@ void StudentInterface::browseDepartments() {
     }
 }
 
+// deptIndex is 0 based. Menus show 1, 2, 3, so callers subtract 1.
 void StudentInterface::listCoursesOfDepartment(int deptIndex) {
+    // Reference, to avoid copying the whole Department each time.
     Department& dept = StoreDepartments[deptIndex];
     int choice = 0;
 

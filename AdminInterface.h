@@ -3,18 +3,16 @@
 
 #include "Interface.h"
 
+// Admin side. Adds departments and courses, saves to CSV.
 class AdminInterface : public Interface {
 public:
+    // override so the compiler errors if this stops matching Interface::run.
     void run() override;
 
 private:
-    // Display all departments
     void listDepartments() const;
-    // Add new department
     void addDepartment();
-    // Add course to exxisting department
     void addCourseToDepartment();
-    // Save all data to CSV file
     void saveChangesToCSV();
 };
 

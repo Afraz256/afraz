@@ -5,6 +5,7 @@
 #include <iomanip>
 #include <cstring>
 
+// Defined in main.cpp. extern points us at those, no new copies.
 extern Department* StoreDepartments;
 extern int TotalDepartments;
 extern const char* csvFile;
@@ -47,11 +48,11 @@ void AdminInterface::addDepartment() {
     std::string name = getNonEmptyString("Enter department name: ");
     if (name.empty()) return; // input aborted (EOF)
 
-    // Trim whitespace from name
+    // Trim both ends so " Math " and "Math" aren't two departments.
     name.erase(0, name.find_first_not_of(" \t\n\r"));
     name.erase(name.find_last_not_of(" \t\n\r") + 1);
 
-    // Check if department already exists
+    // strcmp not ==, since getName() returns char* and == compares pointers.
     for (int i = 0; i < TotalDepartments; ++i) {
         if (strcmp(StoreDepartments[i].getName(), name.c_str()) == 0) {
             std::cout << "Error: Department '" << name << "' already exists." << std::endl;
@@ -59,7 +60,8 @@ void AdminInterface::addDepartment() {
         }
     }
 
-    // Create new array with one extra slot
+    // Grow by one again, on the global array. The copy below is why Department
+    // needs an assignment operator.
     Department* temp = new Department[TotalDepartments + 1];
     for (int i = 0; i < TotalDepartments; ++i) {
         temp[i] = StoreDepartments[i];
@@ -83,6 +85,7 @@ void AdminInterface::addCourseToDepartment() {
     int deptChoice = getValidIntInput("Enter department number [0 to go back]: ", 0, TotalDepartments);
     if (deptChoice == INPUT_ABORTED || deptChoice == 0) return;
 
+    // Reference, not a copy. Without & the course gets added to a temporary.
     Department& selectedDept = StoreDepartments[deptChoice - 1];
 
     std::cout << "\nExisting courses in " << selectedDept.getName() << ":" << std::endl;
@@ -123,9 +126,8 @@ void AdminInterface::saveChangesToCSV() {
         return;
     }
 
-    // Default stream precision is 6 significant digits, so a price like
-    // 12345.67 gets written as 12345.7 and loses a cent on every reload.
-    // Set it once here. Integers are unaffected by this.
+    // Default precision is 6 significant digits, so 12345.67 becomes 12345.7.
+    // Set once here.
     file << std::fixed << std::setprecision(2);
 
     file << TotalDepartments << "\n";

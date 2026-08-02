@@ -1,5 +1,6 @@
 #include "Interface.h"
 #include <iostream>
+#include <limits>
 
 void Interface::printError(const std::string& message) const {
     std::cout << "Error: " << message << std::endl;

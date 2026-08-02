@@ -3,6 +3,7 @@
 #include <sstream>
 #include <limits>
 #include <stdexcept>
+#include <string>
 #include "Department.h"
 #include "Interface.h"
 #include "AdminInterface.h"

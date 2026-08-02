@@ -3,6 +3,7 @@
 #include <iostream>
 #include <fstream>
 #include <iomanip>
+#include <cstring>
 
 extern Department* StoreDepartments;
 extern int TotalDepartments;

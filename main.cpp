@@ -2,6 +2,7 @@
 #include <fstream>
 #include <sstream>
 #include <limits>
+#include <stdexcept>
 #include "Department.h"
 #include "Interface.h"
 #include "AdminInterface.h"
@@ -18,52 +19,67 @@ void loadCSVData() {
     if (!file.is_open()) return;
 
     std::string line;
-    if (std::getline(file, line) && !line.empty()) {
-        TotalDepartments = std::stoi(line);
-        if (TotalDepartments > 0) {
-            StoreDepartments = new Department[TotalDepartments];
-            for (int i = 0; i < TotalDepartments; ++i) {
-                if (std::getline(file, line)) {
-                    std::stringstream ss(line);
-                    std::string deptName, countStr;
-                    std::getline(ss, deptName, ',');
-                    std::getline(ss, countStr, ',');
 
-                    StoreDepartments[i].setName(deptName.c_str());
-                    int courseCount = std::stoi(countStr);
+    // stoi and stod throw if the file contains text where a number belongs.
+    // Catch that here so a damaged data file cannot abort the program before
+    // the menu is ever shown.
+    try {
+        if (std::getline(file, line) && !line.empty()) {
+            TotalDepartments = std::stoi(line);
+            if (TotalDepartments > 0) {
+                StoreDepartments = new Department[TotalDepartments];
+                for (int i = 0; i < TotalDepartments; ++i) {
+                    if (std::getline(file, line)) {
+                        std::stringstream ss(line);
+                        std::string deptName, countStr;
+                        std::getline(ss, deptName, ',');
+                        std::getline(ss, countStr, ',');
 
-                    for (int j = 0; j < courseCount; ++j) {
-                        if (std::getline(file, line)) {
-                            std::stringstream cSS(line);
-                            std::string fullName, schedule, priceStr;
+                        StoreDepartments[i].setName(deptName.c_str());
+                        int courseCount = std::stoi(countStr);
 
-                            std::getline(cSS, fullName, ',');
-                            std::getline(cSS, schedule, ',');
-                            std::getline(cSS, priceStr, ',');
+                        for (int j = 0; j < courseCount; ++j) {
+                            if (std::getline(file, line)) {
+                                std::stringstream cSS(line);
+                                std::string fullName, schedule, priceStr;
 
-                            // Separate Course Number and Name
-                            std::stringstream nameSS(fullName);
-                            std::string cNum, cName;
-                            nameSS >> cNum;
-                            std::getline(nameSS, cName);
-                            if (!cName.empty() && cName[0] == ' ') {
-                                cName = cName.substr(1);
+                                std::getline(cSS, fullName, ',');
+                                std::getline(cSS, schedule, ',');
+                                std::getline(cSS, priceStr, ',');
+
+                                // Separate Course Number and Name
+                                std::stringstream nameSS(fullName);
+                                std::string cNum, cName;
+                                nameSS >> cNum;
+                                std::getline(nameSS, cName);
+                                if (!cName.empty() && cName[0] == ' ') {
+                                    cName = cName.substr(1);
+                                }
+
+                                // Trim leading space for schedule
+                                if (!schedule.empty() && schedule[0] == ' ') {
+                                    schedule = schedule.substr(1);
+                                }
+
+                                double price = std::stod(priceStr);
+                                Course c(cNum, cName, schedule, price);
+                                StoreDepartments[i].addCourse(c);
                             }
-
-                            // Trim leading space for schedule
-                            if (!schedule.empty() && schedule[0] == ' ') {
-                                schedule = schedule.substr(1);
-                            }
-
-                            double price = std::stod(priceStr);
-                            Course c(cNum, cName, schedule, price);
-                            StoreDepartments[i].addCourse(c);
                         }
                     }
                 }
             }
         }
+    } catch (const std::exception& e) {
+        // Throw away whatever was read so far and start empty rather than
+        // running on half-loaded data.
+        std::cout << "Warning: could not read " << csvFile << " (" << e.what()
+                  << "). Starting with no departments." << std::endl;
+        delete[] StoreDepartments;
+        StoreDepartments = nullptr;
+        TotalDepartments = 0;
     }
+
     file.close();
 }
 

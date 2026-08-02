@@ -95,6 +95,14 @@ int main() {
                 userInterface = nullptr;
             }
         } else {
+            // End of input (Ctrl+D or a piped file running out). Retrying here would
+            // spin forever, because clear() resets the flag and the next read hits
+            // EOF again immediately. Break out so the cleanup below still runs.
+            if (std::cin.eof()) {
+                std::cout << "\nInput ended. Exiting." << std::endl;
+                break;
+            }
+
             std::cout << "Error: Invalid input. Enter 1, 2, or 3." << std::endl;
             std::cin.clear();
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');

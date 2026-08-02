@@ -9,21 +9,21 @@
 #include "AdminInterface.h"
 #include "StudentInterface.h"
 
-// Required Global Variables
+// Defined here, reached from the interface files with extern.
 Department* StoreDepartments = nullptr;
 int TotalDepartments = 0;
 const char* csvFile = "data.csv";
 
-// CSV Data Loading Utility
+// File layout: department count, then per department a "name, count" line
+// followed by that many "number name, schedule, price" lines.
 void loadCSVData() {
     std::ifstream file(csvFile);
     if (!file.is_open()) return;
 
     std::string line;
 
-    // stoi and stod throw if the file contains text where a number belongs.
-    // Catch that here so a damaged data file cannot abort the program before
-    // the menu is ever shown.
+    // stoi and stod throw on text where a number should be. Without this a
+    // damaged file kills the program before the menu even shows.
     try {
         if (std::getline(file, line) && !line.empty()) {
             TotalDepartments = std::stoi(line);
@@ -48,7 +48,7 @@ void loadCSVData() {
                                 std::getline(cSS, schedule, ',');
                                 std::getline(cSS, priceStr, ',');
 
-                                // Separate Course Number and Name
+                                // Split "PRG210 Programming" at the first space.
                                 std::stringstream nameSS(fullName);
                                 std::string cNum, cName;
                                 nameSS >> cNum;
@@ -72,8 +72,7 @@ void loadCSVData() {
             }
         }
     } catch (const std::exception& e) {
-        // Throw away whatever was read so far and start empty rather than
-        // running on half-loaded data.
+        // Drop whatever loaded rather than running on half read data.
         std::cout << "Warning: could not read " << csvFile << " (" << e.what()
                   << "). Starting with no departments." << std::endl;
         delete[] StoreDepartments;
@@ -87,6 +86,8 @@ void loadCSVData() {
 int main() {
     loadCSVData();
 
+    // Base class pointer. It holds whichever derived interface the user picks,
+    // which is what makes the run() calls below polymorphic.
     Interface* userInterface = nullptr;
     int choice = 0;
 
@@ -102,19 +103,18 @@ int main() {
 
             if (choice == 1) {
                 userInterface = new StudentInterface();
-                userInterface->run(); // Polymorphic call
-                delete userInterface;
+                userInterface->run(); // picks StudentInterface::run at runtime
+                delete userInterface; // virtual destructor, so the Cart goes too
                 userInterface = nullptr;
             } else if (choice == 2) {
                 userInterface = new AdminInterface();
-                userInterface->run(); // Polymorphic call
+                userInterface->run(); // same call, different function
                 delete userInterface;
                 userInterface = nullptr;
             }
         } else {
-            // End of input (Ctrl+D or a piped file running out). Retrying here would
-            // spin forever, because clear() resets the flag and the next read hits
-            // EOF again immediately. Break out so the cleanup below still runs.
+            // Input ran out. Retrying would spin forever since clear() resets
+            // the flag and the next read hits EOF again straight away.
             if (std::cin.eof()) {
                 std::cout << "\nInput ended. Exiting." << std::endl;
                 break;
@@ -126,7 +126,7 @@ int main() {
         }
     }
 
-    // Cleanup Global Memory
+    // delete[] runs every Department destructor, and each frees its own courses.
     delete[] StoreDepartments;
     std::cout << "Exiting system. Goodbye!" << std::endl;
 

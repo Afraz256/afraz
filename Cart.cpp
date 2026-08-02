@@ -8,6 +8,43 @@ Cart::~Cart() {
     clear();
 }
 
+// Deep copy. Allocate our own array instead of pointing at the other Cart's,
+// or both destructors would free the same block.
+Cart::Cart(const Cart& other) {
+    count = other.count;
+    totalCost = other.totalCost;
+
+    if (count > 0) {
+        courses = new Course[count];
+        for (int i = 0; i < count; ++i) {
+            courses[i] = other.courses[i];
+        }
+    } else {
+        courses = nullptr;
+    }
+}
+
+Cart& Cart::operator=(const Cart& other) {
+    // Guard against c = c. Without it we'd delete our array and then try to
+    // read from it.
+    if (this != &other) {
+        delete[] courses;
+
+        count = other.count;
+        totalCost = other.totalCost;
+
+        if (count > 0) {
+            courses = new Course[count];
+            for (int i = 0; i < count; ++i) {
+                courses[i] = other.courses[i];
+            }
+        } else {
+            courses = nullptr;
+        }
+    }
+    return *this;
+}
+
 void Cart::clear() {
     delete[] courses;
     courses = nullptr;
@@ -48,12 +85,18 @@ void Cart::listCourses() const {
                   << " | Schedule: " << courses[i].getSchedule()
                   << " | Price: $" << std::fixed << std::setprecision(2) << courses[i].getPrice() << std::endl;
     }
-    double tax = totalCost * TAX_RATE;
-    double finalCost = totalCost + tax;
     std::cout << "--------------------" << std::endl;
-    std::cout << "Subtotal: $" << totalCost << std::endl;
-    std::cout << "Tax (13%): $" << tax << std::endl;
-    std::cout << "Total Cost: $" << finalCost << std::endl;
+    std::cout << "Subtotal: $" << getSubtotal() << std::endl;
+    std::cout << "Tax (13%): $" << getSubtotal() * TAX_RATE << std::endl;
+    std::cout << "Total Cost: $" << getTotalWithTax() << std::endl;
+}
+
+double Cart::getSubtotal() const {
+    return totalCost;
+}
+
+double Cart::getTotalWithTax() const {
+    return totalCost + (totalCost * TAX_RATE);
 }
 
 void Cart::checkout() {

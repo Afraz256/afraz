@@ -16,7 +16,7 @@ void AdminInterface::run() {
         std::cout << "Add Course to Department [3]\n";
         std::cout << "Save Changes to CSV [4]\n";
         std::cout << "Exit [5]\n";
-        
+
         choice = getValidIntInput("Enter your choice [1, 2, 3, 4, 5]: ", 1, 5);
 
         switch (choice) {
@@ -42,11 +42,11 @@ void AdminInterface::listDepartments() const {
 
 void AdminInterface::addDepartment() {
     std::string name = getNonEmptyString("Enter department name: ");
-    
+
     // Trim whitespace from name
     name.erase(0, name.find_first_not_of(" \t\n\r"));
     name.erase(name.find_last_not_of(" \t\n\r") + 1);
-    
+
     // Check if department already exists
     for (int i = 0; i < TotalDepartments; ++i) {
         if (strcmp(StoreDepartments[i].getName(), name.c_str()) == 0) {
@@ -54,7 +54,7 @@ void AdminInterface::addDepartment() {
             return;
         }
     }
-    
+
     // Create new array with one extra slot
     Department* temp = new Department[TotalDepartments + 1];
     for (int i = 0; i < TotalDepartments; ++i) {
@@ -89,7 +89,7 @@ void AdminInterface::addCourseToDepartment() {
 
     std::string cNum = getNonEmptyString("Enter course number: ");
     std::string cName = getNonEmptyString("Enter course name: ");
-    
+
     std::string schedule;
     while (true) {
         schedule = getNonEmptyString("Enter course schedule (M/W, T/R, W/F): ");

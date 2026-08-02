@@ -84,7 +84,7 @@ void StudentInterface::listCoursesOfDepartment(int deptIndex) {
 
         for (int i = 0; i < dept.getTotalCourses(); ++i) {
             Course c = dept.getCourses()[i];
-            std::cout << i + 1 << ". " << c.getCourseNumber() << " - " << c.getCourseName() 
+            std::cout << i + 1 << ". " << c.getCourseNumber() << " - " << c.getCourseName()
                       << " | Sched: " << c.getSchedule() << " | Price: $" << c.getPrice() << std::endl;
         }
 

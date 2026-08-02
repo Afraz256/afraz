@@ -22,7 +22,7 @@ Department::~Department() {
 Department::Department(const Department& other) {
     setName(other.name);
     totalCourses = other.totalCourses;
-    
+
     if (totalCourses > 0) {
         courses = new Course[totalCourses];
         for (int i = 0; i < totalCourses; ++i) {
@@ -37,7 +37,7 @@ Department::Department(const Department& other) {
 Department& Department::operator=(const Department& other) {
     if (this != &other) {
         delete[] courses;
-        
+
         setName(other.name);
         totalCourses = other.totalCourses;
 

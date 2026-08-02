@@ -4,7 +4,7 @@
 #include "Course.h"
 #include <cstring>
 
-// Represents the department (e.g. "Computer Science", "Mathematics"). 
+// Represents the department (e.g. "Computer Science", "Mathematics").
 class Department {
 private:
     char name[100];

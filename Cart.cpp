@@ -43,9 +43,9 @@ void Cart::listCourses() const {
 
     std::cout << "\n--- Shopping Cart ---" << std::endl;
     for (int i = 0; i < count; ++i) {
-        std::cout << i + 1 << ". " << courses[i].getCourseNumber() 
-                  << " - " << courses[i].getCourseName() 
-                  << " | Schedule: " << courses[i].getSchedule() 
+        std::cout << i + 1 << ". " << courses[i].getCourseNumber()
+                  << " - " << courses[i].getCourseName()
+                  << " | Schedule: " << courses[i].getSchedule()
                   << " | Price: $" << std::fixed << std::setprecision(2) << courses[i].getPrice() << std::endl;
     }
     double tax = totalCost * TAX_RATE;

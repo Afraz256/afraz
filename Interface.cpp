@@ -10,12 +10,13 @@ int Interface::getValidIntInput(const std::string& prompt, int min, int max) {
     while (true) {
         std::cout << prompt;
         if (std::cin >> choice && choice >= min && choice <= max) {
-            std::cin.ignore(100, '\n');
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
             return choice;
         }
+        if (std::cin.eof()) { return max; } // bail out on EOF
         printError("Invalid choice. Please try again.");
         std::cin.clear();
-        std::cin.ignore(100, '\n');
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     }
 }
 

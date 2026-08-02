@@ -24,6 +24,9 @@ protected:
     std::string getNonEmptyString(const std::string& prompt);
     double getValidPositiveDouble(const std::string& prompt);
     void printError(const std::string& message) const;
+
+    // Strips spaces and tabs off both ends.
+    std::string trim(const std::string& text) const;
 };
 
 #endif

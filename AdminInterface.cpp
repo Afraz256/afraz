@@ -47,12 +47,10 @@ void AdminInterface::listDepartments() const {
 }
 
 void AdminInterface::addDepartment() {
+    // Already trimmed by getNonEmptyString, so " Math " and "Math" land here
+    // as the same thing and can't become two departments.
     std::string name = getNonEmptyString("Enter department name: ");
     if (name.empty()) return; // input aborted (EOF)
-
-    // Trim both ends so " Math " and "Math" aren't two departments.
-    name.erase(0, name.find_first_not_of(" \t\n\r"));
-    name.erase(name.find_last_not_of(" \t\n\r") + 1);
 
     // strcmp not ==, since getName() returns char* and == compares pointers.
     for (int i = 0; i < TotalDepartments; ++i) {

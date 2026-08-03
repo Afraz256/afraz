@@ -10,8 +10,8 @@ Cart::~Cart() {
     clear();
 }
 
-// Deep copy, same as Department's. These two were declared in the header but
-// never written, so any copy would not have linked. fixed by L3I
+/* Deep copy, same as Department's. Both of these were declared in the header
+   but never written, so copying a Cart would not have linked. fixed by L3I */
 Cart::Cart(const Cart& other) {
     count = other.count;
     totalCost = other.totalCost;
@@ -48,8 +48,8 @@ Cart& Cart::operator=(const Cart& other) {
 
 void Cart::clear() {
     delete[] courses;
-    // checkout() empties the cart but the object lives on, so don't leave a
-    // stale pointer here.
+    /* checkout() empties the cart while the object keeps living, so a stale
+       pointer here would break the next addCourse. */
     courses = nullptr;
     count = 0;
     totalCost = 0.0;
@@ -59,8 +59,8 @@ bool Cart::isEmpty() const {
     return count == 0;
 }
 
-// Grow by one, same as Department::addCourse. Running subtotal so we don't
-// walk the array every time.
+/* Grow by one, same as Department::addCourse. totalCost accumulates here so
+   no one has to walk the array to total it. */
 void Cart::addCourse(const Course& course) {
     Course* temp = new Course[static_cast<std::size_t>(count + 1)];
 

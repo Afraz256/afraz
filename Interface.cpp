@@ -24,15 +24,15 @@ int Interface::getValidIntInput(const std::string& prompt, int min, int max) {
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
             return choice;
         }
-        // Used to return max, which only looked right because max was Exit.
-        // On the "[0 to go back]" prompts it picked the last department.
-        // fixed by L3I
+        /* This returned max before, which only looked right because max was the
+           Exit option. On "[0 to go back]" it picked the last department.
+           fixed by L3I */
         if (std::cin.eof()) {
             return INPUT_ABORTED;
         }
         printError("Invalid choice. Please try again.");
 
-        // clear() unjams the stream, ignore() dumps what jammed it. Need both.
+        // clear() unjams the stream, ignore() drops what jammed it. Both needed.
         std::cin.clear();
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     }
@@ -44,14 +44,14 @@ std::string Interface::getNonEmptyString(const std::string& prompt) {
         std::cout << prompt;
         std::getline(std::cin, input);
 
-        // Trim first, then check. Checking first let "   " through as a name,
-        // and the caller's trim then turned it into an empty one. fixed by L3I
+        /* Trim before checking. Checking first let "   " through as a name, and
+           the caller's trim then turned it into an empty one. fixed by L3I */
         std::string trimmed = trim(input);
         if (!trimmed.empty()) {
             return trimmed;
         }
-        // getline keeps failing at EOF and input stays empty, so this would
-        // spin forever. Empty string is the abort signal. fixed by L3I
+        /* getline keeps failing at EOF with input left empty, so this would
+           spin forever. Empty string is the abort signal. fixed by L3I */
         if (std::cin.eof()) {
             return "";
         }
@@ -67,8 +67,7 @@ double Interface::getValidPositiveDouble(const std::string& prompt) {
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
             return value;
         }
-        // Same trick. -1.0 works since a real price is always positive.
-        // fixed by L3I
+        // Same trick, and -1.0 is safe since a real price is always positive.
         if (std::cin.eof()) {
             return -1.0;
         }

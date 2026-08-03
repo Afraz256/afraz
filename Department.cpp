@@ -65,11 +65,11 @@ void Department::setName(const char* deptName) {
     name[sizeof(name) - 1] = '\0';
 }
 
-// Arrays can't grow, so "adding" means building a bigger one and copying over.
-// Admin adds in any order, so this has to work whatever is already here.
+/* Arrays can't grow, so "adding" means building a bigger one and copying over.
+   Admin adds in any order, so this runs with any number already present. */
 void Department::addCourse(const Course& course) {
-    // new[] wants an unsigned size. The count is never negative, so the cast
-    // is safe, and saying so explicitly keeps -Wsign-conversion quiet.
+    /* new[] takes an unsigned size and totalCourses never goes negative, so
+       the cast loses nothing. */
     Course* temp = new Course[static_cast<std::size_t>(totalCourses + 1)];
     for (int i = 0; i < totalCourses; ++i) {
         temp[i] = courses[i];

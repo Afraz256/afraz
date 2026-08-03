@@ -4,8 +4,8 @@
 #include "Course.h"
 #include <cstring>
 
-// One department and its courses. Owns a heap array, so it needs the full
-// Rule of Three.
+/* One department and its courses. Owns a heap array, so it needs the full
+   Rule of Three. */
 class Department {
 private:
     char name[100];      // char array, not std::string
@@ -17,8 +17,8 @@ public:
     Department(const char* deptName);
     ~Department();
 
-    // The default copy would copy the pointer, then two Departments free the
-    // same array. So we write our own.
+    /* The default copy copies the pointer, leaving two Departments to free the
+       same array. These allocate separately instead. */
     Department(const Department& other);
     Department& operator=(const Department& other);
 

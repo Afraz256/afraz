@@ -1,8 +1,7 @@
 #include "AdminInterface.h"
 #include "Department.h"
+#include "CSVUtils.h"
 #include <iostream>
-#include <fstream>
-#include <iomanip>  // for setprecision, fixed by L3I
 #include <cstring>  // strcmp was coming in indirectly, fixed by L3I
 #include <cstddef>
 
@@ -47,8 +46,8 @@ void AdminInterface::listDepartments() const {
 }
 
 void AdminInterface::addDepartment() {
-    // Already trimmed by getNonEmptyString, so " Math " and "Math" land here
-    // as the same thing and can't become two departments.
+    /* getNonEmptyString trims, so " Math " and "Math" arrive identical and
+       can't become two departments. */
     std::string name = getNonEmptyString("Enter department name: ");
     if (name.empty()) return; // input aborted (EOF)
 
@@ -60,8 +59,8 @@ void AdminInterface::addDepartment() {
         }
     }
 
-    // Grow by one again, on the global array. The copy below is why Department
-    // needs an assignment operator.
+    /* Grow by one again, this time on the global array. The copy on the line
+       below is why Department needs an assignment operator. */
     Department* temp = new Department[static_cast<std::size_t>(TotalDepartments + 1)];
     for (int i = 0; i < TotalDepartments; ++i) {
         temp[i] = StoreDepartments[i];
@@ -119,27 +118,7 @@ void AdminInterface::addCourseToDepartment() {
     std::cout << "Course added successfully." << std::endl;
 }
 
-// Writes the same format loadCSVData() in main.cpp reads back.
+// CSVUtils owns the file format. This just triggers the write.
 void AdminInterface::saveChangesToCSV() {
-    std::ofstream file(csvFile);
-    if (!file.is_open()) {
-        printError("Failed to open CSV file for writing.");
-        return;
-    }
-
-    // Default precision is 6 significant digits, so 12345.67 becomes 12345.7.
-    // Set once here. Was losing cents on every save. fixed by L3I
-    file << std::fixed << std::setprecision(2);
-
-    file << TotalDepartments << "\n";
-    for (int i = 0; i < TotalDepartments; ++i) {
-        file << StoreDepartments[i].getName() << ", " << StoreDepartments[i].getTotalCourses() << "\n";
-        for (int j = 0; j < StoreDepartments[i].getTotalCourses(); ++j) {
-            Course c = StoreDepartments[i].getCourses()[j];
-            file << c.getCourseNumber() << " " << c.getCourseName() << ", " << c.getSchedule() << ", " << c.getPrice() << "\n";
-        }
-    }
-
-    file.close();
-    std::cout << "Changes saved successfully." << std::endl;
+    saveToCSV(csvFile);
 }

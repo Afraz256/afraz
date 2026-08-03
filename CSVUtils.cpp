@@ -10,8 +10,8 @@
 extern Department* StoreDepartments;
 extern int TotalDepartments;
 
-// Fields are written with ", " between them, so everything after the first
-// arrives with a leading space. Strip it or the spaces pile up on every save.
+/* Fields are written with ", " between them, so everything after the first
+   arrives with a leading space. Without this the spaces pile up on each save. */
 static std::string trim(const std::string& text) {
     std::size_t first = text.find_first_not_of(" \t\n\r");
     if (first == std::string::npos) {
@@ -21,8 +21,8 @@ static std::string trim(const std::string& text) {
     return text.substr(first, last - first + 1);
 }
 
-// A data file holding a single 0, which is exactly what saveToCSV writes with
-// no departments. Creating it here keeps every file operation in this module.
+/* Writes a file holding a single 0, which is what saveToCSV produces with no
+   departments. Keeping it here leaves every file operation in this module. */
 static bool createEmptyCSV(const char* filename) {
     std::ofstream file(filename);
     if (!file.is_open()) {
@@ -44,8 +44,8 @@ bool loadFromCSV(const char* filename) {
         return false;
     }
 
-    // A failed read or a negative count both mean the file is unusable. A
-    // negative would become a huge unsigned size in new[] below and throw.
+    /* A failed read or a negative count both mean the file is unusable. A
+       negative becomes a huge unsigned size in new[] below and throws. */
     if (!(file >> TotalDepartments) || TotalDepartments < 0) {
         std::cout << "CSV file is unreadable. Starting with empty data.\n";
         TotalDepartments = 0;
@@ -91,8 +91,8 @@ bool loadFromCSV(const char* filename) {
             std::getline(courseStream, schedule, ',');
             courseStream >> price;
 
-            // Every field gets trimmed. Miss the schedule and " M/W" fails the
-            // M/W comparison in AdminInterface::addCourseToDepartment.
+            /* Every field gets trimmed. Skip the schedule and " M/W" fails the
+               M/W comparison in AdminInterface::addCourseToDepartment. */
             StoreDepartments[i].addCourse(Course(trim(courseNumber),
                                                 trim(courseName),
                                                 trim(schedule),
@@ -112,8 +112,8 @@ bool saveToCSV(const char* filename) {
         return false;
     }
 
-    // Default precision is 6 significant digits, so 12345.67 would go out as
-    // 12345.7 and lose a cent every time the file is written.
+    /* Default precision is 6 significant digits, so 12345.67 would go out as
+       12345.7 and lose a cent every time the file is written. */
     file << std::fixed << std::setprecision(2);
 
     file << TotalDepartments << "\n";

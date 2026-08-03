@@ -3,21 +3,21 @@
 
 #include <string>
 
-// Base class for both interfaces. The menu loop and input checking are the
-// same for Admin and Student, so they live here.
+/* Base class for both interfaces. Admin and Student share the input checking
+   and the menu loop shape, so those live here. */
 class Interface {
 public:
-    // Virtual because main deletes through an Interface*. Without it only this
-    // destructor runs and StudentInterface's Cart leaks.
+    /* Virtual because main deletes through an Interface*. Without it only this
+       destructor runs and StudentInterface's Cart leaks. */
     virtual ~Interface() {}
 
-    // Pure virtual, so Interface is abstract. main calls this through a base
-    // pointer and the right one is picked at runtime. That's the polymorphism.
+    /* Pure virtual, so Interface is abstract. main calls this through a base
+       pointer and the derived version is chosen at runtime. */
     virtual void run() = 0;
 
 protected:
     // Returned when input runs out. -1 is safe, menus all start at 0 or 1.
-    static const int INPUT_ABORTED = -1;   // added, fixed by L3I
+    static const int INPUT_ABORTED = -1;   // fixed by L3I
 
     // Protected so only the derived interfaces can use them.
     int getValidIntInput(const std::string& prompt, int min, int max);

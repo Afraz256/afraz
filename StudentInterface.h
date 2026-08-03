@@ -7,7 +7,7 @@
 // Student side. Browse departments, add to cart, check out.
 class StudentInterface : public Interface {
 private:
-    // Owned by this object, so a fresh StudentInterface means an empty cart.
+    // Owned here, so a new StudentInterface starts with an empty cart.
     Cart cart;
 
 public:

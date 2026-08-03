@@ -1,0 +1,10 @@
+# Build output
+cms
+*.o
+*.dSYM/
+
+# macOS Finder junk
+.DS_Store
+
+# data.csv is deliberately NOT ignored. It is the seed data the program
+# loads on startup and it belongs in the repo.
